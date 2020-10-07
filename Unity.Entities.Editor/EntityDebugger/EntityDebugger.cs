@@ -357,6 +357,8 @@ namespace Unity.Entities.Editor
                 SetAllEntitiesFilter(null);
             if (change == PlayModeStateChange.ExitingPlayMode && Selection.activeObject == selectionProxy)
                 Selection.activeObject = null;
+            if (change == PlayModeStateChange.ExitingPlayMode && entityQueryListView != null)
+                entityQueryListView.SelectedSystem = null;
         }
 
         private readonly RepaintLimiter repaintLimiter = new RepaintLimiter();
