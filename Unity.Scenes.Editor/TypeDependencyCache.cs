@@ -52,7 +52,7 @@ namespace Unity.Scenes.Editor
                 throw new System.InvalidOperationException("com.unity.entities requires Asset Pipeline Version 2. Please enable Version 2 in Project Settings / Editor / Asset Pipeline / Mode");
 
             // Custom dependencies are transmitted to the import worker so dont spent time on registering them
-            if (UnityEditor.Experimental.AssetDatabaseExperimental.IsAssetImportWorkerProcess())
+            if (UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
                 return;
 
             using (kRegisterComponentTypes.Auto())

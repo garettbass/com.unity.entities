@@ -22,7 +22,7 @@ namespace Unity.Scenes.Editor
 
         public static void RegisterMonoScripts()
         {
-            if (AssetDatabaseExperimental.IsAssetImportWorkerProcess() || s_Initialized)
+            if (AssetDatabase.IsAssetImportWorkerProcess() || s_Initialized)
                 return;
             s_Initialized = true;
 
