@@ -59,7 +59,7 @@ namespace Unity.Entities.Editor
             {
                 if (rightAlignedText == null)
                 {
-                    rightAlignedText = new GUIStyle(GUI.skin.label)
+                    rightAlignedText = new GUIStyle(UnityEditor.EditorStyles.label)
                     {
                         alignment = TextAnchor.MiddleRight
                     };
@@ -70,6 +70,24 @@ namespace Unity.Entities.Editor
         }
 
         static GUIStyle rightAlignedText;
+
+        static GUIStyle RightAlignedLabelHighlighted
+        {
+            get
+            {
+                if (rightAlignedTextHighlighted == null)
+                {
+                    rightAlignedTextHighlighted = new GUIStyle(UnityEditor.EditorStyles.whiteLabel)
+                    {
+                        alignment = TextAnchor.MiddleRight
+                    };
+                }
+
+                return rightAlignedTextHighlighted;
+            }
+        }
+
+        static GUIStyle rightAlignedTextHighlighted;
 
         internal static MultiColumnHeaderState GetHeaderState()
         {
@@ -399,6 +417,7 @@ namespace Unity.Entities.Editor
             var item = args.item;
 
             var enabled = GUI.enabled;
+            var highlighted = args.focused && args.selected;
 
             if (systemsById.ContainsKey(item.id))
             {
@@ -411,18 +430,20 @@ namespace Unity.Entities.Editor
                     componentSystemBase.Enabled = GUI.Toggle(toggleRect, componentSystemBase.Enabled, GUIContent.none);
                 }
 
+                var rightAlignedLabel = highlighted ? RightAlignedLabelHighlighted : RightAlignedLabel;
+
                 if (componentSystemBase != null)
                 {
                     var timingRect = args.GetCellRect(2);
                     if (componentSystemBase.ShouldRunSystem())
                     {
                         var recorder = recordersBySystem[system];
-                        GUI.Label(timingRect, recorder.ReadMilliseconds().ToString("f2"), RightAlignedLabel);
+                        GUI.Label(timingRect, recorder.ReadMilliseconds().ToString("f2"), rightAlignedLabel);
                     }
                     else
                     {
                         GUI.enabled = false;
-                        GUI.Label(timingRect, "not run", RightAlignedLabel);
+                        GUI.Label(timingRect, "not run", rightAlignedLabel);
                         GUI.enabled = enabled;
                     }
                 }
@@ -435,10 +456,12 @@ namespace Unity.Entities.Editor
                 GUI.enabled = false;
             }
 
+            var label = highlighted ? UnityEditor.EditorStyles.whiteLabel : UnityEditor.EditorStyles.label;
+
             var indent = GetContentIndent(item);
             var nameRect = args.GetCellRect(1);
             nameRect.xMin = nameRect.xMin + indent;
-            GUI.Label(nameRect, item.displayName);
+            GUI.Label(nameRect, item.displayName, label);
             GUI.enabled = enabled;
         }
 
