@@ -353,12 +353,20 @@ namespace Unity.Entities.Editor
 
         private void OnPlayModeStateChange(PlayModeStateChange change)
         {
+            if (change == PlayModeStateChange.EnteredPlayMode)
+            {
+                // display the GUI immediately
+                Repaint();
+            }
+            if (change == PlayModeStateChange.ExitingPlayMode)
+            {
+                // prevent an exception if a system is selected after play mode
+                entityQueryListView.SelectedSystem = null;
+            }
             if (change == PlayModeStateChange.ExitingPlayMode)
                 SetAllEntitiesFilter(null);
             if (change == PlayModeStateChange.ExitingPlayMode && Selection.activeObject == selectionProxy)
                 Selection.activeObject = null;
-            if (change == PlayModeStateChange.ExitingPlayMode && entityQueryListView != null)
-                entityQueryListView.SelectedSystem = null;
         }
 
         private readonly RepaintLimiter repaintLimiter = new RepaintLimiter();
